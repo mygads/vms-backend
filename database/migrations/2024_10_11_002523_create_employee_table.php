@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::connection('pgsql')->create('employee', function (Blueprint $table) {
             $table->string('name', 255)->primary();
-            $table->timestamps();
+            $table->string('email', 255)->unique();
+            $table->string('department', 20)->nullable();
+            $table->integer('phone_number')->nullable();
+            $table->string('employee_code', 3)->nullable();
         });
     }
 
