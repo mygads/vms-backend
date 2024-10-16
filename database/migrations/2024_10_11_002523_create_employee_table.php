@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::connection('pgsql')->create('employee', function (Blueprint $table) {
+        Schema::connection('mysql')->create('employee', function (Blueprint $table) {
             $table->string('name', 255)->primary();
             $table->string('email', 255)->unique();
             $table->string('department', 20)->nullable();

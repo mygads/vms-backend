@@ -11,7 +11,7 @@ class Visitor extends Model
 {
     use HasFactory;
 
-    protected $connection = "pgsql";
+    protected $connection = "mysql";
 
     protected $table = "visitor";
 
@@ -19,6 +19,7 @@ class Visitor extends Model
 
     protected $fillable = [
         'visitor_id',
+        'visitor_date',
         'visitor_name',
         'visitor_from',
         'visitor_host',
