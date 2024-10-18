@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::connection('mysql')->create('visitor', function (Blueprint $table) {
-            $table->id('visitor_id', 255);
+            $table->id('visitor_id');
             $table->date('visitor_date');
             $table->string('visitor_name', 255)->nullable();
             $table->string('visitor_from', 255)->nullable();
