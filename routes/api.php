@@ -11,6 +11,6 @@ Route::get('/visitor', [VisitorController::class, 'index']);
 Route::post('/create', [VisitorController::class, 'store']);
 
 // Update an existing visitor to set checkout time
-Route::put('/checkout/{id}', [VisitorController::class, 'update']);
+Route::put('/checkout/{visitor_id}', [VisitorController::class, 'update']);
 
 ?>

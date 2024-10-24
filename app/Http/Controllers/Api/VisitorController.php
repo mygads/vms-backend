@@ -110,9 +110,9 @@ class VisitorController
 
 
     // Update visitor record to set the checkout time
-    public function update($id)
+    public function update($visitor_id)
     {
-        $visitor = Visitor::findOrFail($id);
+        $visitor = Visitor::where('visitor_id', $visitor_id)->firstOrFail();
 
         $visitor->update([
             'visitor_checkout' => Carbon::now(),
@@ -120,7 +120,7 @@ class VisitorController
 
         return response()->json([
             'success' => true,
-            'message' => '"'. $visitor->visitor_name .'" Check Out',
+            'message' => '"' . $visitor->visitor_name . '" Check Out',
             'data' => new VisitorResource($visitor)
         ]);
     }
