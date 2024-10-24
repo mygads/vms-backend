@@ -25,7 +25,6 @@ class VisitorController
         ]);
     }
 
-    // Store Data Visitor To Database
     public function store(Request $request)
     {
         $request->validate([
@@ -38,6 +37,36 @@ class VisitorController
             'visitor_vehicle' => 'nullable|string|max:10',
             'visitor_img' => 'required|string', // Base64 image string
         ]);
+
+        // Generate visitor_id based on visitor_needs
+        $prefix = '';
+        switch ($request->visitor_needs) {
+            case 'Meeting':
+                $prefix = 'MT';
+                break;
+            case 'Delivery':
+                $prefix = 'DL';
+                break;
+            case 'Contractor':
+                $prefix = 'CT';
+                break;
+            default:
+                $prefix = 'VG'; // Default prefix if none of the specified needs match
+        }
+
+        // Get the latest visitor ID with the specified prefix
+        $latestVisitor = Visitor::where('visitor_id', 'like', "$prefix%")
+            ->orderBy('visitor_id', 'desc')
+            ->first();
+
+        if ($latestVisitor) {
+            $lastNumber = (int)substr($latestVisitor->visitor_id, 2);
+            $newNumber = $lastNumber + 1;
+        } else {
+            $newNumber = 1;
+        }
+
+        $visitorId = $prefix . str_pad($newNumber, 5, '0', STR_PAD_LEFT);
 
         // Process the base64 image if it exists
         $imagePath = null;
@@ -60,6 +89,7 @@ class VisitorController
 
         // Create a new visitor record
         $visitor = Visitor::create([
+            'visitor_id' => $visitorId,
             'visitor_name' => $request->visitor_name,
             'visitor_from' => $request->visitor_from,
             'visitor_host' => $request->visitor_host,
@@ -77,6 +107,7 @@ class VisitorController
             'data' => new VisitorResource($visitor)
         ]);
     }
+
 
     // Update visitor record to set the checkout time
     public function update($id)

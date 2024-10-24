@@ -17,7 +17,7 @@ class VisitorResource extends JsonResource
     {
         return [
             'visitor_id' => $this->visitor_id,
-            'visitor_date' => $this->visitor_date,
+            'visitor_date' => Carbon::parse($this->visitor_date)->format('Y-m-d'),
             'visitor_name' => $this->visitor_name,
             'visitor_from' => $this->visitor_from,
             'visitor_host' => $this->visitor_host,
