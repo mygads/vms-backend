@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Visitor;
+use App\Models\Employee;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\VisitorResource;
@@ -15,6 +16,7 @@ class VisitorController
     public function index()
     {
         $data_visitor = Visitor::whereDate('visitor_date', Carbon::today())
+                                ->with('employee')
                                 ->orderby('visitor_checkin', 'asc')
                                 ->get();
 
@@ -87,29 +89,45 @@ class VisitorController
             $imagePath = $filePath;
         }
 
+        $employees = Employee::where('name', $request->visitor_host)->get();
+
+        if ($employees->count() > 1) {
+            // Multiple employees found with the same name
+            return response()->json([
+                'error' => 'Multiple employees found with that name. Please specify the department.'
+            ], 400);
+        } elseif ($employees->count() == 0) {
+            // No employee found with that name
+            return response()->json(['error' => 'Employee not found'], 404);
+        } else {
+            // Exactly one employee found
+            $employee = $employees->first();
+        }
+
+        $department = $employee->department;
+
         // Create a new visitor record
         $visitor = Visitor::create([
-            'visitor_id' => $visitorId,
-            'visitor_name' => $request->visitor_name,
-            'visitor_from' => $request->visitor_from,
-            'visitor_host' => $request->visitor_host,
-            'visitor_needs' => $request->visitor_needs,
-            'visitor_amount' => $request->visitor_amount,
-            'visitor_vehicle' => $request->visitor_vehicle,
-            'visitor_img' => $imagePath,
-            'visitor_date' => Carbon::today(),
-            'visitor_checkin' => Carbon::now(),
+            'visitor_id'       => $visitorId,
+            'visitor_name'     => $request->visitor_name,
+            'visitor_from'     => $request->visitor_from,
+            'visitor_host'     => $request->visitor_host,
+            'visitor_needs'    => $request->visitor_needs,
+            'visitor_amount'   => $request->visitor_amount,
+            'visitor_vehicle'  => $request->visitor_vehicle,
+            'department'       => $department,
+            'visitor_img'      => $imagePath,
+            'visitor_date'     => Carbon::today(),
+            'visitor_checkin'  => Carbon::now(),
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => '"'. $visitor->visitor_name .'" Check In',
+            'message' => '"' . $visitor->visitor_name . '" Check In',
             'data' => new VisitorResource($visitor)
         ]);
     }
 
-
-    // Update visitor record to set the checkout time
     public function update($visitor_id)
     {
         $visitor = Visitor::where('visitor_id', $visitor_id)->firstOrFail();
@@ -124,4 +142,29 @@ class VisitorController
             'data' => new VisitorResource($visitor)
         ]);
     }
+
+    public function printVisitor($visitor_id)
+    {
+        // Fetch visitor data based on the visitor ID
+        $visitor = Visitor::find($visitor_id);
+
+        if (!$visitor) {
+            return response()->json(['error' => 'Visitor not found'], 404);
+        }
+
+        // Return visitor data as JSON
+        return response()->json($visitor);
+    }
+
+    public function display()
+    {
+        $data_visitor = Visitor::with('visitor')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Display List Visitor Successfully',
+            'data' => VisitorResource::collection($data_visitor)
+        ]);
+    }
+
 }

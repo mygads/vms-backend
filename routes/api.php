@@ -13,4 +13,13 @@ Route::post('/create', [VisitorController::class, 'store']);
 // Update an existing visitor to set checkout time
 Route::put('/checkout/{visitor_id}', [VisitorController::class, 'update']);
 
+// Print using Puppeteer
+Route::get('/print/{visitor_id}', [VisitorController::class, 'printVisitor']);
+
+// For get visitor data specific by id
+Route::get('/visitor/{id}', [VisitorController::class, 'show']);
+
+// For display all data without orderBy
+Route::get('/index', [VisitorController::class, 'display']);
+
 ?>

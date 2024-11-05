@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('department', 20)->nullable();
             $table->integer('phone_number')->nullable();
             $table->string('employee_code', 3)->nullable();
+            $table->integer('nik')->nullable();
         });
     }
 
