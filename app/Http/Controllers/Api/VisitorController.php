@@ -16,7 +16,6 @@ class VisitorController
     public function index()
     {
         $data_visitor = Visitor::whereDate('visitor_date', Carbon::today())
-                                ->with('employee')
                                 ->orderby('visitor_checkin', 'asc')
                                 ->get();
 

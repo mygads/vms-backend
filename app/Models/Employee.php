@@ -24,7 +24,8 @@ class Employee extends Model
         'email',
         'department',
         'phone_number',
-        'employee_code'
+        'employee_code',
+        'nik'
     ];
 
     public $timestamps = false;

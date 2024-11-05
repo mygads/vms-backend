@@ -3,10 +3,8 @@
 namespace App\Http\Resources;
 
 use Carbon\Carbon;
-use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VisitorResource extends JsonResource
 {
