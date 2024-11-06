@@ -24,15 +24,17 @@ class EmployeeController extends Controller
     {
         $validatedData = $request->validate([
             'name'           => 'required|string|max:255',
-            'nik'            => 'required|integer|max:11', // nik is not unique
-            'email'          => 'required|email|unique:employees,email',
+            'nik'            => 'required|string|max:11', // nik is not unique
+            'email'          => 'required|email|unique:employee,email',
             'department'     => 'required|string|max:255',
-            'phone_number'   => 'required|integer|max:11',
+            'phone_number'   => 'required|string|max:11',
             'employee_code'  => 'required|string|max:50', // employee_code is not unique
         ]);
 
         // Create a new employee record with validated data
         $employee = Employee::create($validatedData);
+
+        // dd($employee);
 
         // Return a JSON response
         return response()->json([
@@ -61,9 +63,9 @@ class EmployeeController extends Controller
 
         // Validate only phone number and employee code fields for updates
         $validatedData = $request->validate([
-            'phone_number'   => 'required|integer|max:11',
+            'phone_number'   => 'required|string|max:11',
             'employee_code'  => 'required|string|max:50',
-            'nik'            => 'required|integer|max:11',
+            'nik'            => 'required|string|max:11',
         ]);
 
         // Update the employee record with validated data

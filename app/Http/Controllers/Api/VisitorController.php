@@ -100,10 +100,8 @@ class VisitorController
             return response()->json(['error' => 'Employee not found'], 404);
         } else {
             // Exactly one employee found
-            $employee = $employees->first();
+            $employee = $employees->get('department');
         }
-
-        $department = $employee->department;
 
         // Create a new visitor record
         $visitor = Visitor::create([
@@ -114,7 +112,7 @@ class VisitorController
             'visitor_needs'    => $request->visitor_needs,
             'visitor_amount'   => $request->visitor_amount,
             'visitor_vehicle'  => $request->visitor_vehicle,
-            'department'       => $department,
+            'department'       => $employee,
             'visitor_img'      => $imagePath,
             'visitor_date'     => Carbon::today(),
             'visitor_checkin'  => Carbon::now(),

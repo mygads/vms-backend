@@ -29,6 +29,7 @@ class Visitor extends Model
         'visitor_needs',
         'visitor_amount',
         'visitor_vehicle',
+        'department',
         'visitor_img',
         'visitor_checkin',
         'visitor_checkout',
