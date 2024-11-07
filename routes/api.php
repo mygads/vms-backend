@@ -20,19 +20,19 @@ Route::get('/print/{visitor_id}', [VisitorController::class, 'printVisitor']);
 // For display all data without orderBy
 Route::get('/index', [VisitorController::class, 'display']);
 
-// List all employee (index)
+// List all employees
 Route::get('/employee', [EmployeeController::class, 'index']);
 
-// Store a new employee (index)
+// Store a new employee
 Route::post('/createemployee', [EmployeeController::class, 'store']);
 
-// Edit employee data
-Route::get('/employee/{id}', [EmployeeController::class, 'edit']);
+// Show employee data by name
+Route::get('/edit/{name}', [EmployeeController::class, 'show']);
 
-// Update employee data
-Route::put('/update/{id}', [EmployeeController::class, 'update']);
+// Update employee data by name
+Route::put('/update/{name}', [EmployeeController::class, 'update']);
 
-// Delete employee data
-Route::delete('/delete/{id}', [EmployeeController::class, 'destroy']);
+// Delete employee data by name
+Route::delete('/delete/{name}', [EmployeeController::class, 'destroy']);
 
 ?>

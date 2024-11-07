@@ -6,6 +6,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
@@ -24,19 +25,16 @@ class EmployeeController extends Controller
     {
         $validatedData = $request->validate([
             'name'           => 'required|string|max:255',
-            'nik'            => 'required|string|max:11', // nik is not unique
+            'nik'            => 'required|string|max:11',
             'email'          => 'required|email|unique:employee,email',
             'department'     => 'required|string|max:255',
             'phone_number'   => 'required|string|max:11',
-            'employee_code'  => 'required|string|max:50', // employee_code is not unique
+            'employee_code'  => 'required|string|max:50',
         ]);
 
         // Create a new employee record with validated data
         $employee = Employee::create($validatedData);
 
-        // dd($employee);
-
-        // Return a JSON response
         return response()->json([
             'success' => true,
             'message' => 'Employee created successfully',
@@ -44,10 +42,10 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function edit($name)
+    public function show($name)
     {
         // Find the employee by name
-        $employee = Employee::where('name', $name)->first();
+        $employee = Employee::where('name', $name)->firstOrFail();
 
         return response()->json([
             'success' => true,
@@ -59,15 +57,32 @@ class EmployeeController extends Controller
     public function update(Request $request, $name)
     {
         // Find the employee by name
-        $employee = Employee::where('name', $name)->first();
+        $employee = Employee::where('name', $name)->firstOrFail();
 
-        // Validate only phone number and employee code fields for updates
+        // Validate the fields for updates
         $validatedData = $request->validate([
-            'phone_number'   => 'required|string|max:11',
-            'employee_code'  => 'required|string|max:50',
-            'nik'            => 'required|string|max:11',
+            'email'          => [
+                'sometimes',
+                'email',
+                // function ($attribute, $value, $fail) use ($employee) {
+                //     if ($value !== $employee->email) {
+                //         $fail('The email must match the current email of the employee.');
+                //     }
+                // },
+                Rule::unique('employee', 'email')->ignore($employee->id)
+            ],
+            'phone_number'   => 'sometimes|string|max:11',
+            'employee_code'  => 'sometimes|string|max:50',
+            'department'     => 'sometimes|string|max:255',
         ]);
 
+        if ($employee == $request->email) {
+            unset($validatedData['email']);
+        } else {
+            $validatedData['email'] == $employee->email;
+        }
+
+        dd($validatedData);
         // Update the employee record with validated data
         $employee->update($validatedData);
 
@@ -81,7 +96,7 @@ class EmployeeController extends Controller
     public function destroy($name)
     {
         // Find the employee by name
-        $employee = Employee::where('name', $name)->first();
+        $employee = Employee::where('name', $name)->firstOrFail();
 
         // Delete the employee record
         $employee->delete();
