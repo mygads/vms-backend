@@ -26,13 +26,12 @@ Route::get('/employee', [EmployeeController::class, 'index']);
 // Store a new employee
 Route::post('/createemployee', [EmployeeController::class, 'store']);
 
-// Show employee data by name
-Route::get('/edit/{name}', [EmployeeController::class, 'show']);
+// Show employee data by nik
+Route::get('/edit/{nik}', [EmployeeController::class, 'show']);
 
-// Update employee data by name
-Route::put('/update/{name}', [EmployeeController::class, 'update']);
+// Update employee data by nik
+Route::put('/update/{nik}', [EmployeeController::class, 'update']);
 
-// Delete employee data by name
-Route::delete('/delete/{name}', [EmployeeController::class, 'destroy']);
+// Delete employee data by nik
+Route::delete('/delete/{nik}', [EmployeeController::class, 'destroy']);
 
-?>

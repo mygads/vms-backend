@@ -42,10 +42,10 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function show($name)
+    public function show($nik)
     {
-        // Find the employee by name
-        $employee = Employee::where('name', $name)->firstOrFail();
+        // Find the employee by nik
+        $employee = Employee::where('nik', $nik)->firstOrFail();
 
         return response()->json([
             'success' => true,
@@ -54,35 +54,19 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function update(Request $request, $name)
+    public function update(Request $request, $nik)
     {
-        // Find the employee by name
-        $employee = Employee::where('name', $name)->firstOrFail();
+        // Find the employee by nik
+        $employee = Employee::where('nik', $nik)->firstOrFail();
 
         // Validate the fields for updates
         $validatedData = $request->validate([
-            'email'          => [
-                'sometimes',
-                'email',
-                // function ($attribute, $value, $fail) use ($employee) {
-                //     if ($value !== $employee->email) {
-                //         $fail('The email must match the current email of the employee.');
-                //     }
-                // },
-                Rule::unique('employee', 'email')->ignore($employee->id)
-            ],
+            'email'          => ['sometimes', 'email', Rule::unique('employee', 'email')->ignore($employee->id)],
             'phone_number'   => 'sometimes|string|max:11',
             'employee_code'  => 'sometimes|string|max:50',
             'department'     => 'sometimes|string|max:255',
         ]);
 
-        if ($employee == $request->email) {
-            unset($validatedData['email']);
-        } else {
-            $validatedData['email'] == $employee->email;
-        }
-
-        dd($validatedData);
         // Update the employee record with validated data
         $employee->update($validatedData);
 
@@ -93,10 +77,10 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function destroy($name)
+    public function destroy($nik)
     {
-        // Find the employee by name
-        $employee = Employee::where('name', $name)->firstOrFail();
+        // Find the employee by nik
+        $employee = Employee::where('nik', $nik)->firstOrFail();
 
         // Delete the employee record
         $employee->delete();
