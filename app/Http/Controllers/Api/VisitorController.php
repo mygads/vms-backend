@@ -36,7 +36,7 @@ class VisitorController
             'visitor_needs' => 'nullable|string|max:255',
             'visitor_amount' => 'nullable|integer',
             'visitor_vehicle' => 'nullable|string|max:10',
-            'visitor_img' => 'required|string', // Base64 image string
+            // 'visitor_img' => 'required|string', // Base64 image string
         ]);
 
         // Generate visitor_id based on visitor_needs
@@ -70,23 +70,23 @@ class VisitorController
         $visitorId = $prefix . str_pad($newNumber, 5, '0', STR_PAD_LEFT);
 
         // Process the base64 image if it exists
-        $imagePath = null;
-        if ($request->visitor_img) {
-            $imageData = $request->visitor_img;
+        // $imagePath = null;
+        // if ($request->visitor_img) {
+        //     $imageData = $request->visitor_img;
 
-            // Extract base64 data
-            $imageParts = explode(";base64,", $imageData);
-            $imageBase64 = base64_decode($imageParts[1]);
+        //     // Extract base64 data
+        //     $imageParts = explode(";base64,", $imageData);
+        //     $imageBase64 = base64_decode($imageParts[1]);
 
-            // Use visitor_name to create a unique name for the image
-            $sanitizedVisitorName = Str::slug($request->visitor_name, '_');
-            $imageName = $sanitizedVisitorName . '_' . uniqid() . '.jpeg';
-            $filePath = "visitor_images/{$imageName}";
+        //     // Use visitor_name to create a unique name for the image
+        //     $sanitizedVisitorName = Str::slug($request->visitor_name, '_');
+        //     $imageName = $sanitizedVisitorName . '_' . uniqid() . '.jpeg';
+        //     $filePath = "visitor_images/{$imageName}";
 
-            // Store the image in the public disk
-            Storage::disk('public')->put($filePath, $imageBase64);
-            $imagePath = $filePath;
-        }
+        //     // Store the image in the public disk
+        //     Storage::disk('public')->put($filePath, $imageBase64);
+        //     $imagePath = $filePath;
+        // }
 
         $employees = Employee::where('name', $request->visitor_host)->get();
 
@@ -113,7 +113,7 @@ class VisitorController
             'visitor_amount'   => $request->visitor_amount,
             'visitor_vehicle'  => $request->visitor_vehicle,
             'department'       => $employee->department,
-            'visitor_img'      => $imagePath,
+            // 'visitor_img'      => $imagePath,
             'visitor_date'     => Carbon::today(),
             'visitor_checkin'  => Carbon::now(),
         ]);

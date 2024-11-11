@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('visitor_amount')->nullable();
             $table->string('visitor_vehicle', 10)->nullable();
             $table->string('department', 20)->nullable();
-            $table->string('visitor_img', 255)->nullable();
+            // $table->string('visitor_img', 255)->nullable();
             $table->timestamp('visitor_checkin')->nullable();
             $table->timestamp('visitor_checkout')->nullable();
         });

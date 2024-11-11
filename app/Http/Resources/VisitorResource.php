@@ -25,7 +25,7 @@ class VisitorResource extends JsonResource
             'visitor_amount' => $this->visitor_amount,
             'visitor_vehicle' => $this->visitor_vehicle,
             'department' => $this->department,
-            'visitor_img' => $this->visitor_img,
+            // 'visitor_img' => $this->visitor_img,
 
             'visitor_checkin' => Carbon::Parse($this->visitor_checkin)->format('d-m-Y H:i'),
             'visitor_checkout' => $this->visitor_checkout ? Carbon::parse($this->visitor_checkout)->format('d-m-Y H:i') : null,
