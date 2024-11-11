@@ -29,7 +29,6 @@ class EmployeeController extends Controller
             'email'          => 'required|email|unique:employee,email',
             'department'     => 'required|string|max:255',
             'phone_number'   => 'required|string|max:11',
-            'employee_code'  => 'required|string|max:50',
         ]);
 
         // Create a new employee record with validated data
@@ -63,7 +62,6 @@ class EmployeeController extends Controller
         $validatedData = $request->validate([
             'email'          => ['sometimes', 'email', Rule::unique('employee', 'email')->ignore($employee->id)],
             'phone_number'   => 'sometimes|string|max:11',
-            'employee_code'  => 'sometimes|string|max:50',
             'department'     => 'sometimes|string|max:255',
         ]);
 

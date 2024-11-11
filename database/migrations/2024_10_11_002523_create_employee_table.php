@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->string('department', 20)->nullable();
             $table->string('phone_number')->nullable();
-            $table->string('employee_code', 3)->nullable();
             $table->string('nik')->nullable();
         });
     }
