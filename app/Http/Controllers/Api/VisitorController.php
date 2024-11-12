@@ -88,21 +88,6 @@ class VisitorController
         //     $imagePath = $filePath;
         // }
 
-        $employees = Employee::where('name', $request->visitor_host)->get();
-
-        if ($employees->count() > 1) {
-            // Multiple employees found with the same name
-            return response()->json([
-                'error' => 'Multiple employees found with that name. Please specify the department.'
-            ], 400);
-        } elseif ($employees->count() == 0) {
-            // No employee found with that name
-            return response()->json(['error' => 'Employee not found'], 404);
-        } else {
-            // Exactly one employee found
-            $employee = $employees->first();
-        }
-
         // Create a new visitor record
         $visitor = Visitor::create([
             'visitor_id'       => $visitorId,
@@ -112,7 +97,7 @@ class VisitorController
             'visitor_needs'    => $request->visitor_needs,
             'visitor_amount'   => $request->visitor_amount,
             'visitor_vehicle'  => $request->visitor_vehicle,
-            'department'       => $employee->department,
+            'department'       => $request->department,
             // 'visitor_img'      => $imagePath,
             'visitor_date'     => Carbon::today(),
             'visitor_checkin'  => Carbon::now(),
