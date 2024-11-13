@@ -60,10 +60,17 @@ class EmployeeController extends Controller
 
         // Validate the fields for updates
         $validatedData = $request->validate([
-            'email'          => ['sometimes', 'email', Rule::unique('employee', 'email')->ignore($employee->id)],
             'phone_number'   => 'sometimes|string|max:11',
             'department'     => 'sometimes|string|max:255',
         ]);
+
+        // Check if there's any new data to update
+        if (empty($validatedData)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No new data to update',
+            ], 400);
+        }
 
         // Update the employee record with validated data
         $employee->update($validatedData);
