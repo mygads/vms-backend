@@ -14,6 +14,8 @@ class Visitor extends Model
 
     protected $connection = "mysql";
 
+    public $incrementing = false;
+
     protected $table = "visitor";
 
     protected $primaryKey = "visitor_id";
