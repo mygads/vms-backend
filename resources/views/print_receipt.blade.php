@@ -59,10 +59,11 @@
         .signature-container {
             display: flex;
             justify-content: space-between;
-            text-align: center;
+            flex-direction: row;
         }
         .signature-box {
             width: 30%;
+            align-items: 'center';
         }
         .signature-label {
             font-size: 8px;
@@ -95,7 +96,7 @@
 </head>
 <body>
     <!-- Logo -->
-    <img src="{{ asset('images/logo-sanoh.png') }}" class="logo" alt="Logo">
+    <img src="{{ asset('public/images/logo-sanoh.png') }}" class="logo" alt="Logo">
 
     <!-- QR Code -->
     <div class="qr-code">
