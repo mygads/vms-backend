@@ -3,13 +3,15 @@
 <head>
     <title>Print Receipt</title>
     <style>
-        /* Styles similar to your React component */
+        @page {
+            size: 3in 6in; /* Set custom page size */
+            margin: 0; /* Remove default margins */
+        }
         body {
             width: 3in;
             height: 6in;
             padding: 10px;
             background-color: #FFFFFF;
-            border: 2px solid #D1D5DB;
             font-family: Arial, sans-serif;
             color: #374151;
             margin: 0;
@@ -22,6 +24,9 @@
         .qr-code {
             text-align: center;
             margin-bottom: 5px;
+        }
+        .qr-code img {
+            width: 50%; /* Adjust the QR code size to 50% */
         }
         .visitor-id {
             text-align: center;
@@ -54,10 +59,10 @@
         .signature-container {
             display: flex;
             justify-content: space-between;
+            text-align: center;
         }
         .signature-box {
             width: 30%;
-            text-align: center;
         }
         .signature-label {
             font-size: 8px;
@@ -90,9 +95,8 @@
 </head>
 <body>
     <!-- Logo -->
-    <img src="{{ asset('logo-sanoh.png') }}" class="logo" alt="Logo">
+    <img src="{{ asset('images/logo-sanoh.png') }}" class="logo" alt="Logo">
 
-    {{-- composer require simplesoftwareio/simple-qrcode --}}
     <!-- QR Code -->
     <div class="qr-code">
         <img src="{{ $qrCodeDataUrl }}" alt="QR Code">

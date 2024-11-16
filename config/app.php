@@ -13,7 +13,11 @@ return [
     |
     */
 
+    // 'provides' => [ Barryvdh\DomPDF\ServiceProvider::class,],
+
     'name' => env('APP_NAME', 'Laravel'),
+
+    // 'aliases' => [ 'Pdf' => Barryvdh\DomPDF\Facade::class,],
 
     /*
     |--------------------------------------------------------------------------

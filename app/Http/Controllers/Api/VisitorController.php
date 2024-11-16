@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Visitor;
-use App\Models\Employee;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\VisitorResource;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 class VisitorController
 {
@@ -36,10 +37,8 @@ class VisitorController
             'visitor_needs' => 'nullable|string|max:255',
             'visitor_amount' => 'nullable|integer',
             'visitor_vehicle' => 'nullable|string|max:10',
-            // 'visitor_img' => 'required|string', // Base64 image string
         ]);
 
-        // Generate visitor_id based on visitor_needs
         $prefix = '';
         switch ($request->visitor_needs) {
             case 'Meeting':
@@ -52,10 +51,9 @@ class VisitorController
                 $prefix = 'CT';
                 break;
             default:
-                $prefix = 'VG'; // Default prefix if none of the specified needs match
+                $prefix = 'VG';
         }
 
-        // Get the latest visitor ID with the specified prefix
         $latestVisitor = Visitor::where('visitor_id', 'like', "$prefix%")
             ->orderBy('visitor_id', 'desc')
             ->first();
@@ -69,26 +67,6 @@ class VisitorController
 
         $visitorId = $prefix . str_pad($newNumber, 5, '0', STR_PAD_LEFT);
 
-        // Process the base64 image if it exists
-        // $imagePath = null;
-        // if ($request->visitor_img) {
-        //     $imageData = $request->visitor_img;
-
-        //     // Extract base64 data
-        //     $imageParts = explode(";base64,", $imageData);
-        //     $imageBase64 = base64_decode($imageParts[1]);
-
-        //     // Use visitor_name to create a unique name for the image
-        //     $sanitizedVisitorName = Str::slug($request->visitor_name, '_');
-        //     $imageName = $sanitizedVisitorName . '_' . uniqid() . '.jpeg';
-        //     $filePath = "visitor_images/{$imageName}";
-
-        //     // Store the image in the public disk
-        //     Storage::disk('public')->put($filePath, $imageBase64);
-        //     $imagePath = $filePath;
-        // }
-
-        // Create a new visitor record
         $visitor = Visitor::create([
             'visitor_id'       => $visitorId,
             'visitor_name'     => $request->visitor_name,
@@ -98,10 +76,29 @@ class VisitorController
             'visitor_amount'   => $request->visitor_amount,
             'visitor_vehicle'  => $request->visitor_vehicle,
             'department'       => $request->department,
-            // 'visitor_img'      => $imagePath,
             'visitor_date'     => Carbon::today(),
             'visitor_checkin'  => Carbon::now(),
         ]);
+
+        // Generate QR code using endroid/qr-code
+        $qrCode = new QrCode($visitor->visitor_id);
+        $writer = new PngWriter();
+        $qrCodeData = $writer->write($qrCode)->getString();
+        $qrCodeDataUrl = 'data:image/png;base64,' . base64_encode($qrCodeData);
+
+        // Generate PDF from the blade view
+        $pdf = Pdf::loadView('print_receipt', ['visitor' => $visitor, 'qrCodeDataUrl' => $qrCodeDataUrl]);
+        $filePath = storage_path('app/public/receipts/' . $visitorId . '.pdf');
+        $pdf->save($filePath);
+
+        // Print the PDF using a thermal printer
+        // exec("lp -d Your_Printer_Name $filePath");
+
+        // Temporarily comment out the deletion for testing
+        // unlink($filePath);
+
+        // Return the PDF for download and delete after sending
+        // return response()->download($filePath)->deleteFileAfterSend(true);
 
         return response()->json([
             'success' => true,
@@ -148,5 +145,4 @@ class VisitorController
             'data' => VisitorResource::collection($data_visitor)
         ]);
     }
-
 }
