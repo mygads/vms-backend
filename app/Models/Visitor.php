@@ -14,6 +14,8 @@ class Visitor extends Model
 
     protected $connection = "mysql";
 
+    public $incrementing = false;
+
     protected $table = "visitor";
 
     protected $primaryKey = "visitor_id";
@@ -29,6 +31,7 @@ class Visitor extends Model
         'visitor_needs',
         'visitor_amount',
         'visitor_vehicle',
+        'department',
         'visitor_img',
         'visitor_checkin',
         'visitor_checkout',

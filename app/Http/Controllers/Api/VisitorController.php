@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Visitor;
+use App\Models\Employee;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\VisitorResource;
@@ -35,7 +36,7 @@ class VisitorController
             'visitor_needs' => 'nullable|string|max:255',
             'visitor_amount' => 'nullable|integer',
             'visitor_vehicle' => 'nullable|string|max:10',
-            'visitor_img' => 'required|string', // Base64 image string
+            // 'visitor_img' => 'required|string', // Base64 image string
         ]);
 
         // Generate visitor_id based on visitor_needs
@@ -69,47 +70,46 @@ class VisitorController
         $visitorId = $prefix . str_pad($newNumber, 5, '0', STR_PAD_LEFT);
 
         // Process the base64 image if it exists
-        $imagePath = null;
-        if ($request->visitor_img) {
-            $imageData = $request->visitor_img;
+        // $imagePath = null;
+        // if ($request->visitor_img) {
+        //     $imageData = $request->visitor_img;
 
-            // Extract base64 data
-            $imageParts = explode(";base64,", $imageData);
-            $imageBase64 = base64_decode($imageParts[1]);
+        //     // Extract base64 data
+        //     $imageParts = explode(";base64,", $imageData);
+        //     $imageBase64 = base64_decode($imageParts[1]);
 
-            // Use visitor_name to create a unique name for the image
-            $sanitizedVisitorName = Str::slug($request->visitor_name, '_');
-            $imageName = $sanitizedVisitorName . '_' . uniqid() . '.jpeg';
-            $filePath = "visitor_images/{$imageName}";
+        //     // Use visitor_name to create a unique name for the image
+        //     $sanitizedVisitorName = Str::slug($request->visitor_name, '_');
+        //     $imageName = $sanitizedVisitorName . '_' . uniqid() . '.jpeg';
+        //     $filePath = "visitor_images/{$imageName}";
 
-            // Store the image in the public disk
-            Storage::disk('public')->put($filePath, $imageBase64);
-            $imagePath = $filePath;
-        }
+        //     // Store the image in the public disk
+        //     Storage::disk('public')->put($filePath, $imageBase64);
+        //     $imagePath = $filePath;
+        // }
 
         // Create a new visitor record
         $visitor = Visitor::create([
-            'visitor_id' => $visitorId,
-            'visitor_name' => $request->visitor_name,
-            'visitor_from' => $request->visitor_from,
-            'visitor_host' => $request->visitor_host,
-            'visitor_needs' => $request->visitor_needs,
-            'visitor_amount' => $request->visitor_amount,
-            'visitor_vehicle' => $request->visitor_vehicle,
-            'visitor_img' => $imagePath,
-            'visitor_date' => Carbon::today(),
-            'visitor_checkin' => Carbon::now(),
+            'visitor_id'       => $visitorId,
+            'visitor_name'     => $request->visitor_name,
+            'visitor_from'     => $request->visitor_from,
+            'visitor_host'     => $request->visitor_host,
+            'visitor_needs'    => $request->visitor_needs,
+            'visitor_amount'   => $request->visitor_amount,
+            'visitor_vehicle'  => $request->visitor_vehicle,
+            'department'       => $request->department,
+            // 'visitor_img'      => $imagePath,
+            'visitor_date'     => Carbon::today(),
+            'visitor_checkin'  => Carbon::now(),
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => '"'. $visitor->visitor_name .'" Check In',
+            'message' => '"' . $visitor->visitor_name . '" Check In',
             'data' => new VisitorResource($visitor)
         ]);
     }
 
-
-    // Update visitor record to set the checkout time
     public function update($visitor_id)
     {
         $visitor = Visitor::where('visitor_id', $visitor_id)->firstOrFail();
@@ -124,4 +124,29 @@ class VisitorController
             'data' => new VisitorResource($visitor)
         ]);
     }
+
+    public function printVisitor($visitor_id)
+    {
+        // Fetch visitor data based on the visitor ID
+        $visitor = Visitor::find($visitor_id);
+
+        if (!$visitor) {
+            return response()->json(['error' => 'Visitor not found'], 404);
+        }
+
+        // Return visitor data as JSON
+        return response()->json($visitor);
+    }
+
+    public function display()
+    {
+        $data_visitor = Visitor::with('visitor')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Display List Visitor Successfully',
+            'data' => VisitorResource::collection($data_visitor)
+        ]);
+    }
+
 }

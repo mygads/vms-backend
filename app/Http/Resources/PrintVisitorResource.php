@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class VisitorResource extends JsonResource
+class PrintVisitorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,8 +24,6 @@ class VisitorResource extends JsonResource
             'visitor_needs' => $this->visitor_needs,
             'visitor_amount' => $this->visitor_amount,
             'visitor_vehicle' => $this->visitor_vehicle,
-            'department' => $this->department,
-            // 'visitor_img' => $this->visitor_img,
 
             'visitor_checkin' => Carbon::Parse($this->visitor_checkin)->format('d-m-Y H:i'),
             'visitor_checkout' => $this->visitor_checkout ? Carbon::parse($this->visitor_checkout)->format('d-m-Y H:i') : null,

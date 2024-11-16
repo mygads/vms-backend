@@ -19,12 +19,12 @@ return new class extends Migration
 
             // Foreign key column name from table employee
             $table->string('visitor_host', 255);
-            // $table->foreign('visitor_host')->references('name')->on('employee')->onDelete('cascade');
-
+            
             $table->string('visitor_needs', 255)->nullable();
             $table->integer('visitor_amount')->nullable();
             $table->string('visitor_vehicle', 10)->nullable();
-            $table->string('visitor_img', 255)->nullable();
+            $table->string('department', 20)->nullable();
+            // $table->string('visitor_img', 255)->nullable();
             $table->timestamp('visitor_checkin')->nullable();
             $table->timestamp('visitor_checkout')->nullable();
         });
