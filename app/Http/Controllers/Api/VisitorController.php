@@ -92,7 +92,11 @@ class VisitorController
         $pdf->save($filePath);
 
         // Print the PDF using a thermal printer
-        // exec("lp -d Your_Printer_Name $filePath");
+        // Example thermal printer name
+        // $printerName = 'Thermal_Printer_01';
+
+        // Print the PDF using the thermal printer
+        // exec("lp -d $printerName $filePath");
 
         // Temporarily comment out the deletion for testing
         // unlink($filePath);
