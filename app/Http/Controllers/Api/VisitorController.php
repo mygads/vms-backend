@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Rawilk\Printing\Facades\Printing;
 
 class VisitorController
 {
@@ -88,25 +89,26 @@ class VisitorController
 
         // Generate PDF from the blade view
         $pdf = Pdf::loadView('print_receipt', ['visitor' => $visitor, 'qrCodeDataUrl' => $qrCodeDataUrl]);
-        $filePath = storage_path('app/public/receipts/' . $visitorId . '.pdf');
+        $filePath = storage_path("app/public/receipts/{$visitorId}.pdf");
         $pdf->save($filePath);
 
-        // Print the PDF using a thermal printer
-        // Example thermal printer name
-        // $printerName = 'Thermal_Printer_01';
+        // composer require rawilk/laravel-printing composer --ignore-platform-req=ext-intl composer require mike42/escpos-php
 
-        // Print the PDF using the thermal printer
-        // exec("lp -d $printerName $filePath");
+        // Printer ID (replace with your thermal printer's ID)
+        $printerId = 'YOUR_PRINTER_ID';
+
+        // Use Laravel Printing to send the PDF to the thermal printer
+        Printing::newPrintTask()
+            ->printer($printerId)
+            ->file($filePath)
+            ->send();
 
         // Temporarily comment out the deletion for testing
-        // unlink($filePath);
-
-        // Return the PDF for download and delete after sending
-        // return response()->download($filePath)->deleteFileAfterSend(true);
+        unlink($filePath);
 
         return response()->json([
             'success' => true,
-            'message' => '"' . $visitor->visitor_name . '" Check In',
+            'message' => "\"{$visitor->visitor_name}\" Check In",
             'data' => new VisitorResource($visitor)
         ]);
     }

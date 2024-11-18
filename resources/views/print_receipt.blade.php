@@ -8,7 +8,7 @@
             margin: 0; /* Remove default margins */
         }
         body {
-            width: 3in;
+            width: 2.8in;
             height: 6in;
             padding: 10px;
             background-color: #FFFFFF;
@@ -16,17 +16,20 @@
             color: #374151;
             margin: 0;
         }
+        .logo-container {
+            text-align: center;
+        }
         .logo {
-            width: 72px;
-            margin: 0 auto 10px auto;
-            display: block;
+            width: 84px;
+            display: inline-block;
+            margin-bottom: 5px;
         }
         .qr-code {
             text-align: center;
             margin-bottom: 5px;
         }
         .qr-code img {
-            width: 50%; /* Adjust the QR code size to 50% */
+            width: 40%; /* Adjust the QR code size to 50% */
         }
         .visitor-id {
             text-align: center;
@@ -36,10 +39,11 @@
             margin-bottom: 5px;
         }
         .info-container {
+            margin-top: 10px;
             margin-bottom: 5px;
         }
         .info-text {
-            font-size: 10px;
+            font-size: 12px;
             color: #374151;
             margin-bottom: 8px;
         }
@@ -47,37 +51,37 @@
             font-weight: bold;
         }
         .signature-section {
-            margin-top: 10px;
+            margin-top: 30px;
+            margin-bottom: 30px
         }
+
         .signature-title {
-            font-size: 10px;
+            font-size: 14px;
             font-weight: bold;
             text-align: center;
             color: #374151;
             margin-bottom: 5px;
         }
-        .signature-container {
-            display: flex;
-            justify-content: space-between;
-            flex-direction: row;
-        }
+
         .signature-box {
-            width: 30%;
-            align-items: 'center';
+            width: 100%;
         }
+
         .signature-label {
-            font-size: 8px;
+            font-size: 10px;
             color: #6B7280;
-            margin-bottom: 20px;
+            margin-bottom: 40px; /* Increased spacing to move the line down */
         }
+
         .signature-line {
             border-top: 1px solid #4B5563;
-            width: 100%;
-            margin-top: auto;
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
         }
         .notice {
             text-align: center;
-            font-size: 8px;
+            font-size: 10px;
             color: #374151;
             margin-top: 10px;
         }
@@ -96,7 +100,14 @@
 </head>
 <body>
     <!-- Logo -->
-    <img src="{{ asset('public/images/logo-sanoh.png') }}" class="logo" alt="Logo">
+    @php
+        $image_path = public_path('images/logo-sanoh.png');
+        $image_data = base64_encode(file_get_contents($image_path));
+        $logo_src = 'data:image/png;base64,' . $image_data;
+    @endphp
+    <div class="logo-container">
+        <img src="{{ $logo_src }}" class="logo" alt="Logo">
+    </div>
 
     <!-- QR Code -->
     <div class="qr-code">
@@ -109,7 +120,10 @@
     <!-- Visitor Information -->
     <div class="info-container">
         <div class="info-text">
-            <span class="bold-text">Nama:</span> {{ $visitor->visitor_name }}
+            <span class="bold-text">Tanggal Masuk:</span> {{ $visitor->visitor_checkin }}
+        </div>
+        <div class="info-text">
+            <span class="bold-text">Nama Tamu:</span> {{ $visitor->visitor_name }}
         </div>
         <div class="info-text">
             <span class="bold-text">Asal Perusahaan:</span> {{ $visitor->visitor_from }}
@@ -128,20 +142,29 @@
     <!-- Signature Section -->
     <div class="signature-section">
         <div class="signature-title">TANDA TANGAN</div>
-        <div class="signature-container">
-            <div class="signature-box">
-                <div class="signature-label">Visitor</div>
-                <div class="signature-line"></div>
-            </div>
-            <div class="signature-box">
-                <div class="signature-label">Host</div>
-                <div class="signature-line"></div>
-            </div>
-            <div class="signature-box">
-                <div class="signature-label">Security</div>
-                <div class="signature-line"></div>
-            </div>
-        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <!-- Signature cells -->
+                <td style="border: none; width: 33%; text-align: center;">
+                    <div class="signature-box">
+                        <div class="signature-label">Visitor</div>
+                        <div class="signature-line"></div>
+                    </div>
+                </td>
+                <td style="border: none; width: 33%; text-align: center;">
+                    <div class="signature-box">
+                        <div class="signature-label">Host</div>
+                        <div class="signature-line"></div>
+                    </div>
+                </td>
+                <td style="border: none; width: 33%; text-align: center;">
+                    <div class="signature-box">
+                        <div class="signature-label">Security</div>
+                        <div class="signature-line"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <!-- Notice -->
