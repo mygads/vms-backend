@@ -11,6 +11,7 @@
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "mike42/escpos-php": "^4.0",
+        "printnode/printnode-php": "^2.1",
         "rawilk/laravel-printing": "^3.0",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },

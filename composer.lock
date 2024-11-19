@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b67e384ba72e49f0c64e25300b29c70",
+    "content-hash": "59e4e581d05ad5067dc648a713aa1925",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2983,6 +2983,52 @@
                 }
             ],
             "time": "2024-07-20T21:41:07+00:00"
+        },
+        {
+            "name": "printnode/printnode-php",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrintNode/PrintNode-PHP.git",
+                "reference": "c111bd06d452332b058006618d4d2a36201273f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrintNode/PrintNode-PHP/zipball/c111bd06d452332b058006618d4d2a36201273f5",
+                "reference": "c111bd06d452332b058006618d4d2a36201273f5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrintNode\\": "src/PrintNode"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Contributors",
+                    "email": "support@printnode.com",
+                    "homepage": "https://www.printnode.com"
+                }
+            ],
+            "description": "Connect any printer to your application with PrintNode Client and easy to use JSON API",
+            "homepage": "https://github.com/PrintNode/PrintNode-PHP",
+            "keywords": [
+                "PrintNode",
+                "api",
+                "php",
+                "printing"
+            ],
+            "support": {
+                "issues": "https://github.com/PrintNode/PrintNode-PHP/issues",
+                "source": "https://github.com/PrintNode/PrintNode-PHP/tree/2.1.0"
+            },
+            "time": "2023-09-19T13:31:46+00:00"
         },
         {
             "name": "psr/clock",
