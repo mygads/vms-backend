@@ -57,22 +57,24 @@ class VisitorController
                 $prefix = 'VG';
         }
 
-        // Get the current year
-        $currentYear = Carbon::now()->year;
+        // Get the current year in two-digit format
+        $currentYearShort = Carbon::now()->format('y'); // e.g., '24' for 2024
 
-        // Retrieve the latest visitor ID with the same prefix and within the current year
-        $latestVisitor = Visitor::where('visitor_id', 'like', "$prefix%")
-            ->whereYear('visitor_date', $currentYear)
+        // Construct the visitorPrefix including the year
+        $visitorPrefix = $prefix . $currentYearShort; // e.g., 'MT24'
+
+        // Retrieve the latest visitor ID with the same prefix
+        $latestVisitor = Visitor::where('visitor_id', 'like', "$visitorPrefix%")
             ->orderBy('visitor_id', 'desc')
             ->first();
 
         // Calculate the new visitor number
         $newNumber = $latestVisitor
-            ? ((int)substr($latestVisitor->visitor_id, strlen($prefix))) + 1
+            ? ((int)substr($latestVisitor->visitor_id, strlen($visitorPrefix))) + 1
             : 1;
 
         // Create the new visitor ID
-        $visitorId = $prefix . str_pad($newNumber, 5, '0', STR_PAD_LEFT);
+        $visitorId = $visitorPrefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 
         // Create the visitor record in the database
         $visitor = Visitor::create([
@@ -88,7 +90,7 @@ class VisitorController
             'visitor_checkin'  => Carbon::now(),
         ]);
 
-        // Return a JSON response
+        // Return a JSON response without QR code or view rendering
         return response()->json([
             'success' => true,
             'message' => "\"{$visitor->visitor_name}\" Check In",
