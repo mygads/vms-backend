@@ -57,14 +57,18 @@ class VisitorController
                 $prefix = 'VG';
         }
 
-        // Retrieve the latest visitor ID with the same prefix
+        // Get the current year
+        $currentYear = Carbon::now()->year;
+
+        // Retrieve the latest visitor ID with the same prefix and within the current year
         $latestVisitor = Visitor::where('visitor_id', 'like', "$prefix%")
+            ->whereYear('visitor_date', $currentYear)
             ->orderBy('visitor_id', 'desc')
             ->first();
 
         // Calculate the new visitor number
         $newNumber = $latestVisitor
-            ? ((int)substr($latestVisitor->visitor_id, 2)) + 1
+            ? ((int)substr($latestVisitor->visitor_id, strlen($prefix))) + 1
             : 1;
 
         // Create the new visitor ID
@@ -84,7 +88,7 @@ class VisitorController
             'visitor_checkin'  => Carbon::now(),
         ]);
 
-        // Return a JSON response without QR code or view rendering
+        // Return a JSON response
         return response()->json([
             'success' => true,
             'message' => "\"{$visitor->visitor_name}\" Check In",
