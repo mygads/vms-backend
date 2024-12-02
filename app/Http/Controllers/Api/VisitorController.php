@@ -94,7 +94,7 @@ class VisitorController
         return response()->json([
             'success' => true,
             'message' => "\"{$visitor->visitor_name}\" Check In",
-            'data'    => new VisitorResource($visitor)
+            'data'    => VisitorResource::make($visitor)
         ]);
     }
 
@@ -161,20 +161,20 @@ class VisitorController
     //     ]);
     // }
 
-    // public function update($visitor_id)
-    // {
-    //     $visitor = Visitor::where('visitor_id', $visitor_id)->firstOrFail();
+    public function update($visitor_id)
+    {
+        $visitor = Visitor::where('visitor_id', $visitor_id)->firstOrFail();
 
-    //     $visitor->update([
-    //         'visitor_checkout' => Carbon::now(),
-    //     ]);
+        $visitor->update([
+            'visitor_checkout' => Carbon::now(),
+        ]);
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => '"' . $visitor->visitor_name . '" Check Out',
-    //         'data' => new VisitorResource($visitor)
-    //     ]);
-    // }
+        return response()->json([
+            'success' => true,
+            'message' => '"' . $visitor->visitor_name . '" Check Out',
+            'data' => new VisitorResource($visitor)
+        ]);
+    }
 
     public function printVisitor($visitor_id)
     {
