@@ -28,7 +28,7 @@ class EmployeeController extends Controller
             'nik'            => 'required|string|max:11',
             'email'          => 'required|email|unique:employee,email',
             'department'     => 'required|string|max:255',
-            'phone_number'   => 'required|string|max:13',
+            'phone_number'   => 'required|string|max:14',
         ]);
 
         // Create a new employee record with validated data
@@ -60,7 +60,7 @@ class EmployeeController extends Controller
 
         // Validate the fields for updates
         $validatedData = $request->validate([
-            'phone_number'   => 'sometimes|string|max:13',
+            'phone_number'   => 'sometimes|string|max:14',
             'department'     => 'sometimes|string|max:255',
         ]);
 
