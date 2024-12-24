@@ -53,6 +53,9 @@ class VisitorController
             case 'Contractor':
                 $prefix = 'CT';
                 break;
+            case 'Sortir':
+                $prefix = 'ST';
+                break;
             default:
                 $prefix = 'VG';
         }
